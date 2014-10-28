@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lattice Boltzmann simulation in javascript</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+</head>
+<body>
+    <canvas id='mpcCanvas' width="600px" height="480px" style="
+    background-color: #eee; border: thin solid #ddd;">
+    </canvas>
+    <!-- <br>
+    <br>
+    <button class='btn btn-play' onClick="next()">Start simulation</button>
+    <button class='btn btn-stop' onClick="sim.playsteps = 0; step = 0;">Stop</button> -->
+
+    <script src="js/dist/app.js"></script>
+</body>
+</html>
