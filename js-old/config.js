@@ -3,26 +3,31 @@ module.exports = function () {
     var Config = function() {
         console.log('Creating config')
         this.config = {
-            'domain': './Config/2DDamBreakDomain',
+            'domain':
+                "--------------------------\
+                -                        -\
+                -                        -\
+                --------------------------"
+            ,
             'velocity-set': [
-                {dx: 0,      dy: 0,   w: 4 / 9},
+                {x: 0,      y: 0,   w: 4 / 9},
 
-                {dx: 0,      dy: 1,   w: 1 / 9},
-                {dx: 0,      dy: -1,  w: 1 / 9},
-                {dx: - 1,    dy: 0,   w: 1 / 9},
-                {dx: 1,      dy: 0,   w: 1 / 9},
+                {x: 0,      y: 1,   w: 1 / 9},
+                {x: 0,      y: -1,  w: 1 / 9},
+                {x: - 1,    y: 0,   w: 1 / 9},
+                {x: 1,      y: 0,   w: 1 / 9},
 
-                {dx: 1,      dy: 1,   w: 1 / 36},
-                {dx: - 1,    dy: -1,  w: 1 / 36},
-                {dx: 1,      dy: -1,  w: 1 / 36},
-                {dx: - 1,    dy: 1,   w: 1 / 36},
+                {x: 1,      y: 1,   w: 1 / 36},
+                {x: - 1,    y: -1,  w: 1 / 36},
+                {x: 1,      y: -1,  w: 1 / 36},
+                {x: - 1,    y: 1,   w: 1 / 36},
 
             ],
             // This array gives the index of the opposite velocity set corresponding to the index given.
             // This will be useful when implementing bounce back boundary conditions
             'opposite-velocity-set': [1, 3, 2, 5, 4, 7, 6, 9, 8],
             'speed-of-sound-squared': 1 / 3,
-            'relaxation-time': 1,
+            'relaxation-time': 0.5120,
             'initial-distributions': function(x, y) {
                 if (1 == 1 || (x == 2 && y == 2)) {
                     var rand = Math.random();

@@ -44,6 +44,7 @@ module.exports = function() {
         draw: function(context) {
             // Uniformly draw nodes on the canvas
             var that = this;
+
             this.forEachNode(function(x, y) {
                 var radius = Math.sqrt(
                     (that.bounds.width / (that.nodes.length - 1) ) * (that.bounds.width / (that.nodes.length - 1) ) +
@@ -55,11 +56,51 @@ module.exports = function() {
                 var position = that.getNodePosition(x, y);
 
                 context.translate(position.x, position.y);
+                // draw awesome background
+                // context.moveTo(x, y);
+                // context.lineTo(x, y);
+                // context.stroke();
+                // context.fillRect(x, y, width, height)
                 that.getNode(x, y).draw(context, radius);
 
                 context.restore();
+
+                // that.drawNodeGrid(context, x, y);
             });
         },
+        drawNodeGrid: function(context, x, y) {
+            var position = this.getNodePosition(x, y);
+            var neighbours = this.getNeighbouringNodes(x, y);
+
+            var velocitySet = Config.get('velocity-set');
+
+            for (var i = 0; i < velocitySet.length; i++) {
+                var set = velocitySet[i];
+                var nextSet = velocitySet[i + 1 % velocitySet.length];
+
+                this.getNode(x + set.x, y + set.y);
+                this.getNode(x + nextSet.x, y + nextSet.y);
+
+                first_neightbour_position = this.getNodePosition(x + set.x, y + set.y);
+                next_neightbour_position = this.getNodePosition(x + nextSet.x, y + nextSet.y);
+
+                context.beginPath();
+                context.moveTo(x, y);
+                context.lineTo(first_neightbour_position.x, first_neightbour_position.y);
+                context.lineTo(next_neightbour_position.x, next_neightbour_position.y);
+                // context.fill();
+                context.stroke();
+
+            };
+
+            for (var i = 0; i < neighbours.length; i++) {
+                var neighbour = neighbours[i];
+                var position_neighbour = this.getNodePosition(x, y);
+                context.moveTo()
+            };
+            context.moveTo(position.x, position.y);
+        },
+
         update: function() {
             var that = this;
             // Check for mouseover
