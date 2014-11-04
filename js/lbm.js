@@ -6,6 +6,26 @@ module.exports = function() {
         this.structure = this.initializeStructure(config);
         this.relaxationTime = config.get('relaxation-time');
 
+        var canvas = document.getElementById('mpcCanvas');
+        var StructureVisualizer = require('./Visualizers/LatticeStructureVisaualizer2D');
+        var DensityVisualizer = require('./Visualizers/DensityVisualizer2D');
+
+        var graphCanvas = document.getElementById('graphCanvas');
+        var DensityVisualizationGraph = require('./Visualizers/DensityVisualizationGraph');
+        this.graph = new DensityVisualizationGraph(this.structure, graphCanvas);
+        console.log(this.graph);
+
+        this.visualizer = new StructureVisualizer(this.structure, canvas);
+        this.visualizer = new DensityVisualizer(this.structure, canvas, this.visualizer);
+
+        //canvas.width  = 640 //window.innerWidth;
+        //canvas.height = 480 //window.innerHeight;
+        canvas.width = 40*40;
+        canvas.height = 40*40;
+
+        graphCanvas.width = canvas.width;
+        graphCanvas.height = canvas.height;
+
         // @TODO: create an awesome visualizer that has a node visualizer, structure
         // visualizer, domain visualizer etc.
         //
@@ -35,8 +55,8 @@ module.exports = function() {
 
         stream: function() {
             var that = this.structure;
+            var directions = that.getDirections();
             this.structure.forEachNode(function(node, idx) {
-                var directions = that.getDirections();
 
                 for (var k = 0; k < directions.length; k++) {
                     var direction = k;//directions[k];
@@ -44,13 +64,60 @@ module.exports = function() {
                     node.streamTo(direction, neighbour);
                 };
             });
+
+            // apply boundary conditions
+            this.structure.forEachNode(function(node, idx) {
+                if (node.type == "boundary") {
+                    for (var k = 0; k < directions.length; k++) {
+                        var direction = k;//directions[k];
+                        var neighbour = that.getNeighbourOfNodeInDirection(idx, direction);
+                        node.applyBoundary(direction, neighbour);
+                    };
+                }
+            });
         },
 
         run: function() {
-            // this.visualizer.keepRendering();
+            // this.visualizer.k    eepRendering();
+            console.log("Density voor collision: ", this.structure.getDensity());
+            this.collision();
+            console.log("Density na collision: ", this.structure.getDensity());
+            this.visualizer.render();
+            this.graph.render();
+            console.log("Density voor streamen: ", this.structure.getDensity());
             this.stream();
-            this.collide();
-        }
+            console.log("Density na streamen: ", this.structure.getDensity());
+
+            this.visualizer.render();
+            this.graph.render();
+        },
+
+        play: function() {
+            window.requestAnimationFrame(this.update.bind(this));
+        },
+
+        update: function() {
+            if (this.wait > 0) {
+                this.wait --;
+                window.requestAnimationFrame(this.update.bind(this));
+            } else {
+                this.run();
+
+                if (this.running != 0) {
+                    console.log('running');
+                    this.running--;
+                    this.wait = 20;
+                    window.requestAnimationFrame(this.update.bind(this));
+                }
+            }
+        },
+
+
+        runFor: function(iterations) {
+            this.running = iterations;
+            this.update();
+            return this;
+        },
     };
 
     return Simulation;

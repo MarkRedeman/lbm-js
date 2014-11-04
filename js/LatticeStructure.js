@@ -10,11 +10,10 @@ module.exports = function() {
         // amount of nodes in x and y direction
 
         var Domain = require('./Config/2DDamBreakDomain');
-        var domain = new Domain(this.velocitySet);
+        var domain = new Domain(config);
         // var domain = require(config.get('domain'));
         this.nx = domain.dx;
         this.ny = domain.dy;
-        console.log(this.nx, this.ny);
         this.initializeNodes(domain);
     }
 
@@ -57,7 +56,7 @@ module.exports = function() {
         getNeighbourOfNodeInDirection: function(idx, direction) {
             // if it can't find a neighbouring node, then send a ghost node
             var domainIdx = this.idxToDomain(idx);
-            console.log(this.velocitySet, direction);
+
             domainIdx.x += this.velocitySet[direction].dx;
             domainIdx.y += this.velocitySet[direction].dy;
 
@@ -71,24 +70,34 @@ module.exports = function() {
 
         idxToDomain: function(idx) {
             x = idx % this.nx;
-            y = idx / this.ny;
+            y = Math.floor(idx / this.nx);
             return {x: x, y: y};
         },
 
         domainToIdx: function(domainIdx) {
-            idx = domainIdx.y * this.ny + domainIdx.x;
+            idx = domainIdx.y * this.nx + domainIdx.x;
 
             return idx;
         },
 
         isInDomain: function(domainIdx) {
-            return domainIdx.x > 0 && domainIdx < this.nx &&
-                    domainIdx.y > 0 && domainIdx < this.ny;
+            return domainIdx.x >= 0 && domainIdx.x < (this.nx) &&
+                    domainIdx.y >= 0 && domainIdx.y < (this.ny);
         },
 
         ghostNode: function(domainIdx) {
             return new GhostNode;
         },
+
+        getDensity: function() {
+            density = 0;
+
+            for (var i = 0; i < this.nodes.length; i++) {
+                density += this.nodes[i].getDensity();
+            };
+
+            return density;
+        }
     }
 
     return LatticeStructure;

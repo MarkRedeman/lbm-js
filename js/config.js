@@ -20,7 +20,7 @@ module.exports = function () {
             ],
             // This array gives the index of the opposite velocity set corresponding to the index given.
             // This will be useful when implementing bounce back boundary conditions
-            'opposite-velocity-set': [1, 3, 2, 5, 4, 7, 6, 9, 8],
+            'opposite-velocity-set': [0, 2, 1, 4, 3, 6, 5, 8, 7],
             'speed-of-sound-squared': 1 / 3,
             'relaxation-time': 1,
             'initial-distributions': function(x, y) {

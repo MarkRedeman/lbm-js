@@ -1,8 +1,8 @@
 module.exports = function() {
-    var Domain = function(velocitySet) {
-        this.dx = 100;
-        this.dy = 100;
-        this.velocitySet = velocitySet;
+    var Domain = function(config) {
+        this.dx = 80;
+        this.dy = 80;
+        this.config = config;
     };
 
     Domain.prototype = {
@@ -12,24 +12,41 @@ module.exports = function() {
             var NoSlipBounceBackNode = require('./../NoSlipBounceBackNode');
             var GhostNode = require('./../GhostNode');
 
-            if (this.isOnBoundary(domainIdx)) {
-                return new NoSlipBounceBackNode();
+            var distributions = this.initialDistributions(domainIdx);
+
+            if (this.isOnWall(domainIdx)) {
+
             }
 
-            var node = new LatticeNode();
+            if (this.isOnBoundary(domainIdx)) {
+                return new NoSlipBounceBackNode(distributions, this.config.get('opposite-velocity-set'));
+            }
+
+            var node = new LatticeNode(distributions);
 
             return node;
         },
 
+        isOnWall: function(domainIdx) {
+            return domainIdx.y === 0;
+        },
+
         isOnBoundary: function(domainIdx) {
-            return (domainIdx == 0 || domainIdx.x == this.dx || domainIdx.y == 0 || domainIdx.y == this.dy);
+            return (domainIdx.x === 0 || domainIdx.x === (this.dx - 1) ||
+                domainIdx.y === 0 || domainIdx.y === (this.dy - 1));
         },
 
         initialDistributions: function(domainIdx) {
             var distributions = [];
 
-            for (var i = 0; i < this.velocitySet.length; i++) {
-                distributions[i] = this.velocitySet[i].w;
+            var velocitySet = this.config.get('velocity-set');
+
+            for (var i = 0; i < velocitySet.length; i++) {
+                // if (domainIdx.y > 70) {
+                    distributions[i] = velocitySet[i].w;
+                // } else {
+                //     distributions[i] = 0;
+                // }
             };
 
             return distributions;
