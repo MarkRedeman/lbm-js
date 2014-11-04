@@ -8,8 +8,8 @@ module.exports = function() {
         this.oppositeDirections = config.get('opposite-velocity-set');
 
         // amount of nodes in x and y direction
-
-        var Domain = require('./Config/2DDamBreakDomain');
+// 2DZouHeDomain
+        var Domain = require('./Config/2DZouHeDomain');
         var domain = new Domain(config);
         // var domain = require(config.get('domain'));
         this.nx = domain.dx;

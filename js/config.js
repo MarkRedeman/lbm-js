@@ -3,7 +3,8 @@ module.exports = function () {
     var Config = function() {
         console.log('Creating config')
         this.config = {
-            'domain': './Config/2DDamBreakDomain',
+            // 'domain': './Config/2DDamBreakDomain',
+            'domain': './Config/2DZouHeDomain',
             'velocity-set': [
                 {dx: 0,      dy: 0,   w: 4 / 9},
 
@@ -22,7 +23,7 @@ module.exports = function () {
             // This will be useful when implementing bounce back boundary conditions
             'opposite-velocity-set': [0, 2, 1, 4, 3, 6, 5, 8, 7],
             'speed-of-sound-squared': 1 / 3,
-            'relaxation-time': 1,
+            'relaxation-time': 0.6,
             'initial-distributions': function(x, y) {
                 if (1 == 1 || (x == 2 && y == 2)) {
                     var rand = Math.random();

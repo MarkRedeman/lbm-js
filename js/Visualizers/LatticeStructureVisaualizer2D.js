@@ -30,7 +30,10 @@ module.exports = function() {
             // Draw the ndoe
             switch (node.type) {
                 case "lattice":
-                    context.strokeStyle = context.fillStyle = '#486a96';
+                    if (node.position === undefined)
+                        context.strokeStyle = context.fillStyle = '#486a96';
+                    else
+                        context.strokeStyle = context.fillStyle = 'red';
                 break;
                 case "boundary":
                     context.strokeStyle = context.fillStyle = 'limegreen';
@@ -47,12 +50,12 @@ module.exports = function() {
             var velocity = node.getVelocity(node.getDensity(), this.structure.velocitySet);
             this.drawArrow(context, velocity.x, velocity.y, 20);
 
-            context.strokeStyle = 'red';
             context.restore();
         },
 
         drawArrow: function(context, x, y, magnitude, maxMagnitude) {
             // make arrows unit
+            context.strokeStyle = 'red';
             speed = Math.sqrt(x * x + y * y);
 
             context.beginPath();
