@@ -1,8 +1,14 @@
 module.exports = function() {
     var Domain = function(config) {
-        this.dx = 20;
-        this.dy = 80;
+        this.dx = 60;
+        this.dy = 60;
+        this.vx = 0.5;
         this.config = config;
+        var Reynolds = config.get('Re');
+        var nu = this.vx * this.dx / Reynolds;
+        this.relaxationTime = 3 * nu + 1 / 2;
+
+        // this.relaxationTime = this.config.get('relaxation-time');
     };
 
     Domain.prototype = {
@@ -15,7 +21,7 @@ module.exports = function() {
 
             var distributions = this.initialDistributions(domainIdx);
             // moving wall to the right
-            var velocity = { x: 0.1, y: 0 };
+            var velocity = { x: this.vx, y: 0 };
 
             if (this.isOnWall(domainIdx) && ! this.isCorner(domainIdx)) {
                 // if is corner

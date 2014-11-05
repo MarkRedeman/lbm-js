@@ -58,7 +58,7 @@ module.exports = function() {
             var domainIdx = this.idxToDomain(idx);
 
             domainIdx.x += this.velocitySet[direction].dx;
-            domainIdx.y += this.velocitySet[direction].dy;
+            domainIdx.y -= this.velocitySet[direction].dy;
 
             if (! this.isInDomain(domainIdx)) {
                 return this.ghostNode(domainIdx);

@@ -3,6 +3,7 @@ module.exports = function() {
         this.dx = 80;
         this.dy = 80;
         this.config = config;
+        this.relaxationTime = this.config.get('relaxation-time');
     };
 
     Domain.prototype = {

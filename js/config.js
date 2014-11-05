@@ -8,22 +8,23 @@ module.exports = function () {
             'velocity-set': [
                 {dx: 0,      dy: 0,   w: 4 / 9},
 
-                {dx: 0,      dy: 1,   w: 1 / 9},
-                {dx: 0,      dy: -1,  w: 1 / 9},
-                {dx: - 1,    dy: 0,   w: 1 / 9},
                 {dx: 1,      dy: 0,   w: 1 / 9},
+                {dx: 0,      dy: 1,   w: 1 / 9},
+                {dx: - 1,    dy: 0,   w: 1 / 9},
+                {dx: 0,      dy: -1,  w: 1 / 9},
 
                 {dx: 1,      dy: 1,   w: 1 / 36},
+                {dx: - 1,    dy: 1,   w: 1 / 36},
                 {dx: - 1,    dy: -1,  w: 1 / 36},
                 {dx: 1,      dy: -1,  w: 1 / 36},
-                {dx: - 1,    dy: 1,   w: 1 / 36},
 
             ],
             // This array gives the index of the opposite velocity set corresponding to the index given.
             // This will be useful when implementing bounce back boundary conditions
-            'opposite-velocity-set': [0, 2, 1, 4, 3, 6, 5, 8, 7],
+            'opposite-velocity-set': [0, 3, 4, 1, 2, 7, 8, 5, 6],
             'speed-of-sound-squared': 1 / 3,
-            'relaxation-time': 0.6,
+            'relaxation-time': 0.55,
+            'Re': 1000,
             'initial-distributions': function(x, y) {
                 if (1 == 1 || (x == 2 && y == 2)) {
                     var rand = Math.random();

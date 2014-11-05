@@ -4,7 +4,10 @@ module.exports = function() {
     Simulation = function() {
         var config = require('./config');
         this.structure = this.initializeStructure(config);
-        this.relaxationTime = config.get('relaxation-time');
+        var Domain = require('./Config/2DZouHeDomain');
+        var domain = new Domain(config);
+        this.relaxationTime = domain.relaxationTime;
+        console.log("relaxationTime: ", this.relaxationTime);
 
         var canvas = document.getElementById('mpcCanvas');
         var StructureVisualizer = require('./Visualizers/LatticeStructureVisaualizer2D');
@@ -118,6 +121,14 @@ module.exports = function() {
             this.update();
             return this;
         },
+
+        info: function(x, y) {
+            console.table(
+                this.structure.nodes[
+                    this.structure.domainToIdx({x: x, y: y})
+                ]
+            );
+        }
     };
 
     return Simulation;
