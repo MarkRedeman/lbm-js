@@ -5,41 +5,50 @@ module.exports = function() {
         var config = require('./config');
         this.structure = this.initializeStructure(config);
         var Domain = require('./Config/2DZouHeDomain');
-        var domain = new Domain(config);
-        this.relaxationTime = domain.relaxationTime;
+        // var Domain = require('./Config/2DZouHeDomain');
+        this.domain = new Domain(config);
+        this.relaxationTime = this.domain.relaxationTime;
         console.log("relaxationTime: ", this.relaxationTime);
 
-        var canvas = document.getElementById('mpcCanvas');
-        var StructureVisualizer = require('./Visualizers/LatticeStructureVisaualizer2D');
-        var DensityVisualizer = require('./Visualizers/DensityVisualizer2D');
-
-        var graphCanvas = document.getElementById('graphCanvas');
-        var DensityVisualizationGraph = require('./Visualizers/DensityVisualizationGraph');
-        this.graph = new DensityVisualizationGraph(this.structure, graphCanvas);
-        console.log(this.graph);
-
-        this.visualizer = new StructureVisualizer(this.structure, canvas);
-        this.visualizer = new DensityVisualizer(this.structure, canvas, this.visualizer);
-
-        //canvas.width  = 640 //window.innerWidth;
-        //canvas.height = 480 //window.innerHeight;
-        canvas.width = 40*40;
-        canvas.height = 40*40;
-
-        graphCanvas.width = canvas.width;
-        graphCanvas.height = canvas.height;
-
-        // @TODO: create an awesome visualizer that has a node visualizer, structure
-        // visualizer, domain visualizer etc.
-        //
-        // this.visualizer = new DomainVisualizer(this.structure, canvas);
-        // this.statVisualizer = new StatVisualizer();
-        // velocityVisualizer, densityVisualizer
+        this.initializeVisualizers();
 
         console.log("Initialized everything!");
     }
 
     Simulation.prototype = {
+        initializeVisualizers: function() {
+            this.visualizers = [];
+            var StructureVisualizer = require('./Visualizers/LatticeStructureVisaualizer2D');
+            var DensityVisualizer = require('./Visualizers/DensityVisualizer2D');
+            var SpeedVisualizer = require('./Visualizers/SpeedVisualizer2D');
+            var DensityVisualizationGraph = require('./Visualizers/DensityVisualizationGraph');
+
+            var denstiyCanvas = document.getElementById('densityCanvas');
+            var distanceBetweenNodes = 5;
+            var structure = new StructureVisualizer(this.structure, denstiyCanvas, distanceBetweenNodes);
+            this.visualizers.push(
+                new DensityVisualizer(this.structure, denstiyCanvas, structure, distanceBetweenNodes)
+            );
+            // Draw each node
+            denstiyCanvas.width = distanceBetweenNodes * this.domain.dx;
+            denstiyCanvas.height = distanceBetweenNodes * this.domain.dy;
+
+            var speedCanvas = document.getElementById('speedCanvas');
+            var structure = new StructureVisualizer(this.structure, speedCanvas, distanceBetweenNodes);
+            this.visualizers.push(
+                new SpeedVisualizer(this.structure, speedCanvas, structure, distanceBetweenNodes)
+            );
+            speedCanvas.width = distanceBetweenNodes * this.domain.dx;
+            speedCanvas.height = distanceBetweenNodes * this.domain.dy;
+
+            var graphCanvas = document.getElementById('graphCanvas');
+            this.visualizers.push(
+                new DensityVisualizationGraph(this.structure, graphCanvas)
+            );
+            graphCanvas.width = distanceBetweenNodes * this.domain.dx;
+            graphCanvas.height = distanceBetweenNodes * this.domain.dy;
+        },
+
         initializeStructure: function(config) {
             // actually because dt = dx = dy we should only have to
             // give one size since the structure should be able to
@@ -81,18 +90,9 @@ module.exports = function() {
         },
 
         run: function() {
-            // this.visualizer.k    eepRendering();
-            console.log("Density voor collision: ", this.structure.getDensity());
+            console.log(this.structure.getDensity());
             this.collision();
-            console.log("Density na collision: ", this.structure.getDensity());
-            this.visualizer.render();
-            this.graph.render();
-            console.log("Density voor streamen: ", this.structure.getDensity());
             this.stream();
-            console.log("Density na streamen: ", this.structure.getDensity());
-
-            this.visualizer.render();
-            this.graph.render();
         },
 
         play: function() {
@@ -102,16 +102,16 @@ module.exports = function() {
         update: function() {
             if (this.wait > 0) {
                 this.wait --;
-                window.requestAnimationFrame(this.update.bind(this));
             } else {
-                this.run();
+                this.visualize();
+                this.wait = 50;
+            }
 
-                if (this.running != 0) {
-                    console.log('running');
-                    this.running--;
-                    this.wait = 20;
-                    window.requestAnimationFrame(this.update.bind(this));
-                }
+            this.run();
+
+            if (this.running != 0) {
+                this.running--;
+                window.requestAnimationFrame(this.update.bind(this));
             }
         },
 
@@ -128,6 +128,12 @@ module.exports = function() {
                     this.structure.domainToIdx({x: x, y: y})
                 ]
             );
+        },
+
+        visualize: function() {
+            for (var i = 0; i < this.visualizers.length; i++) {
+                this.visualizers[i].render();
+            };
         }
     };
 

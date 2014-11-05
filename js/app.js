@@ -8,6 +8,5 @@ console.log("Starting simulation");
 var sim = new Simulation();
 console.log(sim);
 window.sim = sim;
-sim.visualizer.render();
-sim.graph.render();
+sim.visualize();
 // sim.run();

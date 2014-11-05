@@ -4,7 +4,7 @@ module.exports = function () {
         console.log('Creating config')
         this.config = {
             // 'domain': './Config/2DDamBreakDomain',
-            'domain': './Config/2DZouHeDomain',
+            'domain': './Config/2DDamBreakDomain',
             'velocity-set': [
                 {dx: 0,      dy: 0,   w: 4 / 9},
 
@@ -24,7 +24,7 @@ module.exports = function () {
             'opposite-velocity-set': [0, 3, 4, 1, 2, 7, 8, 5, 6],
             'speed-of-sound-squared': 1 / 3,
             'relaxation-time': 0.55,
-            'Re': 1000,
+            'Re': 10000,
             'initial-distributions': function(x, y) {
                 if (1 == 1 || (x == 2 && y == 2)) {
                     var rand = Math.random();

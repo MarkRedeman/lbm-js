@@ -1,10 +1,10 @@
 module.exports = function() {
     var Domain = function(config) {
-        this.dx = 60;
-        this.dy = 60;
-        this.vx = 0.5;
+        this.dx = 128;
+        this.dy = 128;
+        this.vx = 0.05;
         this.config = config;
-        var Reynolds = config.get('Re');
+        var Reynolds = 100;// config.get('Re');
         var nu = this.vx * this.dx / Reynolds;
         this.relaxationTime = 3 * nu + 1 / 2;
 
